@@ -83,13 +83,18 @@ float ultrasonico_get_distance_cm(uint8_t trigger, uint8_t echo) {
     /* Escribo un 0 en el Trigger */
     gpio_put(trigger, false);
     /* Espero a que el pulso llegue al Echo */
-    while(!gpio_get(echo));
+    absolute_time_t from, to;
+    while(!gpio_get(echo))
+    {
     /* Mido el tiempo de cuando llega el pulso */
-    absolute_time_t from = get_absolute_time();
+    from = get_absolute_time();
     /* Espero a que el pulso del Echo baje a cero */
-    while(gpio_get(echo));
+    }
+    while(gpio_get(echo))
+    {
     /* Mido el tiempo cuando termina el pulso */
-    absolute_time_t to = get_absolute_time();
+    to = get_absolute_time();
+    }
     /* Saco la diferencia de tiempo (el ancho del pulso) en us */
     int64_t pulse_width = absolute_time_diff_us(from, to);
     /* Calculo la distancia y la devuelvo */
